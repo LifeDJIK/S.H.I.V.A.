@@ -60,3 +60,9 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+# Database folder contents
+database/*
+
+# Keep all .gitkeep
+!.gitkeep

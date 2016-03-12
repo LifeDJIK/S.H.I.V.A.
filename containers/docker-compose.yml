@@ -1,0 +1,17 @@
+mongo:
+    image: mongo
+    ports:
+     - "127.0.0.1:27017:27017"
+    volumes:
+     - ../database:/data/db
+memcached:
+    image: memcached
+    ports:
+     - "127.0.0.1:11211:11211"
+shiva:
+    build: .
+    links:
+     - mongo:mongo
+     - memcached:memcached
+    ports:
+     - "127.0.0.1:8080:8080"
