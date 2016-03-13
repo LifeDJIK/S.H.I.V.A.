@@ -51,21 +51,15 @@ class Application(object):
 
 def main():
     """ Main (entry point) """
-    # Add test record
-    client = MongoClient("mongo")
-    db = client.shiva
-    db["tests"].insert_one({"test": "passed"})
-    # Run application
     cherrypy.config.update({"server.socket_host": "0.0.0.0"})
-    #
     template_engine = jinja2.Environment(loader=jinja2.FileSystemLoader(
         "/usr/src/app/template"))
+    mongo = MongoClient("mongo")
     modules = {
         "heartbeat": Heartbeat(),
-        "auth": Auth(template_engine)
+        "auth": Auth(template_engine, mongo)
     }
     application = Application(template_engine, modules)
-    #
     cherrypy.quickstart(application, config="S.H.I.V.A..conf")
 
 

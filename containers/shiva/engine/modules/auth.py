@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # coding=utf-8
-# pylint: disable=I0011,C0103,E1101,R0201,R0903
+# pylint: disable=I0011,C0103,E1101,R0201,R0903,W0702
 """
 S.H.I.V.A. - Social network History & Information Vault & Analyser
 
@@ -31,12 +31,9 @@ class Auth(object):
             cherrypy.session["login_redirect"] = path
             raise cherrypy.HTTPRedirect("/auth/login")
 
-    def __init__(self, template_engine):
+    def __init__(self, template_engine, mongo):
         self.template_engine = template_engine
-        # TODO: mongodb
-        self.users = {
-            "test": "test"
-        }
+        self.mongo = mongo
 
     @cherrypy.expose
     def index(self):
@@ -57,8 +54,14 @@ class Auth(object):
             return self.template_engine.get_template(
                 "login.html"
             ).render(token=cherrypy.session["login_token"])
-        if (token != cherrypy.session.get("login_token", "") or
-                login not in self.users or password != self.users[login]):
+        try:
+            user = self.mongo["shiva"]["users"].find_one({
+                "login": login,
+                "password": password
+            })
+        except:
+            user = None
+        if token != cherrypy.session.get("login_token", "") or user is None:
             raise cherrypy.HTTPRedirect(
                 "/auth/login?message=Invalid login or password!")
         cherrypy.session.pop("login_token", "")
