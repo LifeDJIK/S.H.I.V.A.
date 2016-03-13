@@ -9,9 +9,15 @@ memcached:
     ports:
      - "127.0.0.1:11211:11211"
 shiva:
-    build: .
+    build: shiva
     links:
      - mongo:mongo
      - memcached:memcached
     ports:
      - "127.0.0.1:8080:8080"
+balancer:
+    build: balancer
+    links:
+     - shiva:shiva
+    ports:
+     - "127.0.0.1:80:80"
