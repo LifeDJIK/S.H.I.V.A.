@@ -13,6 +13,10 @@ shiva:
     links:
      - mongo:mongo
      - memcached:memcached
+    log_driver: "json-file"
+    log_opt:
+        max-size: "10m"
+        max-file: "5"
     ports:
      - "127.0.0.1:8080:8080"
 balancer:
