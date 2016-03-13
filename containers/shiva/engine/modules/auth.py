@@ -9,6 +9,8 @@ Auth module
 
 
 import uuid
+import hashlib
+import binascii
 import cherrypy
 
 
@@ -55,10 +57,12 @@ class Auth(object):
                 "login.html"
             ).render(token=cherrypy.session["login_token"])
         try:
-            user = self.mongo["shiva"]["users"].find_one({
-                "login": login,
-                "password": password
-            })
+            user = self.mongo["shiva"]["users"].find_one({"login": login})
+            if user is not None:
+                salt = binascii.unhexlify(user["salt"])
+                dkey = hashlib.pbkdf2_hmac("sha512", password, salt, 100000)
+                if binascii.hexlify(dkey) != user["password"]:
+                    user = None
         except:
             user = None
         if token != cherrypy.session.get("login_token", "") or user is None:
@@ -67,7 +71,8 @@ class Auth(object):
         cherrypy.session.pop("login_token", "")
         redirect_target = cherrypy.session.pop("login_redirect", "/")
         cherrypy.session.regenerate()
-        cherrypy.session["login"] = login
+        cherrypy.session["id"] = user["id"]
+        cherrypy.session["login"] = user["login"]
         raise cherrypy.HTTPRedirect(redirect_target)
 
     @cherrypy.expose
