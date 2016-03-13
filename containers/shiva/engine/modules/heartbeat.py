@@ -14,7 +14,7 @@ import cherrypy
 class Heartbeat(object):
     """ Simple heartbeat / avalaible module for haproxy """
 
-    MODULE_NAME = "Heartbeat"
+    MODULE_NAME = None
 
     @cherrypy.expose
     def index(self):

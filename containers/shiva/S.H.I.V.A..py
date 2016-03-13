@@ -14,13 +14,14 @@ import cherrypy
 from pymongo import MongoClient
 
 from engine.tools import secureheaders
-from engine.modules.auth import Auth
-from engine.modules.heartbeat import Heartbeat
-
-
 cherrypy.tools.secureheaders = cherrypy.Tool(
     "before_finalize", secureheaders, priority=60)
+
+from engine.modules.auth import Auth
 cherrypy.tools.check_login = cherrypy.Tool("before_handler", Auth.check_login)
+
+from engine.modules.heartbeat import Heartbeat
+from engine.modules.notes import Notes
 
 
 class Application(object):
@@ -57,7 +58,8 @@ def main():
     mongo = MongoClient("mongo")
     modules = {
         "heartbeat": Heartbeat(),
-        "auth": Auth(template_engine, mongo)
+        "auth": Auth(template_engine, mongo),
+        "notes": Notes(template_engine, mongo)
     }
     application = Application(template_engine, modules)
     cherrypy.quickstart(application, config="S.H.I.V.A..conf")
