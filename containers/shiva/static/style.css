@@ -40,6 +40,13 @@ textarea {
     resize: none;
 }
 
+hr {
+    border: 0;
+    height: 0.9px;
+    color: #000000;
+    background-color: #000000;
+}
+
 .block {
     border-style: solid;
     border-width: 1px;

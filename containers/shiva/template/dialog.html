@@ -26,6 +26,10 @@
             {{ line|e }}<br />
             {%- endfor %}
         </p>
+        {%- if node.lost_attachments %}
+        <hr />
+        {{ node.lost_attachments|e }}
+        {%- endif %}
     </div>    
     {%- endfor %}
     {%- endif %}

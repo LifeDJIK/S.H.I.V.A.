@@ -116,12 +116,17 @@ class VK(object):
             else:
                 timestamp = message["datetime"].strftime("%Y.%m.%d %H:%M:%S")
             body = message["text"].splitlines()
+            lost_attachments = None
+            if message["has_lost_attachments"]:
+                lost_attachments = "Attachments: {}".format(
+                    " ".join(message["lost_attachments"]))
             nodes.append({
                 "class_": class_,
                 "id_": id_,
                 "author": author,
                 "timestamp": timestamp,
-                "body": body
+                "body": body,
+                "lost_attachments": lost_attachments
             })
         message = None
         if not nodes:
