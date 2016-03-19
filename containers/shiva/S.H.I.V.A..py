@@ -22,6 +22,7 @@ cherrypy.tools.check_login = cherrypy.Tool("before_handler", Auth.check_login)
 
 from engine.modules.heartbeat import Heartbeat
 from engine.modules.notes import Notes
+from engine.modules.vk import VK
 
 
 class Application(object):
@@ -59,7 +60,8 @@ def main():
     modules = {
         "heartbeat": Heartbeat(),
         "auth": Auth(template_engine, mongo),
-        "notes": Notes(template_engine, mongo)
+        "notes": Notes(template_engine, mongo),
+        "vk": VK(template_engine, mongo)
     }
     application = Application(template_engine, modules)
     cherrypy.quickstart(application, config="S.H.I.V.A..conf")
