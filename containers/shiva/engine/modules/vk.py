@@ -70,6 +70,7 @@ class VK(object):
             "dialogs.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            back="/",
             message=message,
             nodes=nodes
         )
@@ -131,6 +132,7 @@ class VK(object):
             "dialog.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            back="/vk/",
             message=message,
             nodes=nodes
         )

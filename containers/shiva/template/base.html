@@ -13,6 +13,9 @@
 <div id="header">
     {{ self.title() }}
     <div style="text-align: right; float: right;">
+        {%- if back %}
+        <a class="button" href="{{ back|e }}">Back</a>
+        {%- endif %}
         <a class="button" href="/">Main page</a>
         {%- if user %}
         <a class="button" href="/auth/logout">Logout ({{ user|e }})</a>

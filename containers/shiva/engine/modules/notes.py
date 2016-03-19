@@ -31,6 +31,7 @@ class Notes(object):
             "notes.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            back="/",
             message=message,
             token=cherrypy.session["notes_token"],
             notes=self.mongo[viewpoint]["notes"].find()
