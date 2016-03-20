@@ -55,6 +55,7 @@ class VK(object):
             history_link = "/vk/read?id={}".format(sender)
             statistics_link = "#"
             nodes.append({
+                "id": sender,
                 "name": name,
                 "info": info,
                 "records": records,
@@ -137,7 +138,7 @@ class VK(object):
             "dialog.html"
         ).render(
             user=cherrypy.session.get("login", None),
-            back="/vk/",
+            back="/vk/#id{}".format(id),
             message=message,
             nodes=nodes
         )
