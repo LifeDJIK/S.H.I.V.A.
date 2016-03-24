@@ -9,6 +9,7 @@ Tools
 
 
 import cherrypy
+import logging
 
 
 def secureheaders():
@@ -17,3 +18,14 @@ def secureheaders():
     headers["X-Frame-Options"] = "DENY"
     headers["X-XSS-Protection"] = "1; mode=block"
     headers["Content-Security-Policy"] = "default-src='self'"
+
+
+class IgnoreRequestFilter(logging.Filter):
+    """ Ignore requests on URL """
+
+    def __init__(self, request_to_ignore):
+        super(IgnoreRequestFilter, self).__init__()
+        self.request_to_ignore = request_to_ignore
+
+    def filter(self, record):
+        return self.request_to_ignore not in record.getMessage()

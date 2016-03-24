@@ -14,6 +14,7 @@ import platform
 
 from pymongo import MongoClient
 
+from engine.tools import IgnoreRequestFilter
 from engine.tools import secureheaders
 cherrypy.tools.secureheaders = cherrypy.Tool(
     "before_finalize", secureheaders, priority=60)
@@ -55,7 +56,6 @@ class Application(object):
 
 def main():
     """ Main (entry point) """
-    cherrypy.config.update({"server.socket_host": "0.0.0.0"})
     template_engine = jinja2.Environment(loader=jinja2.FileSystemLoader(
         "/usr/src/app/template"))
     mongo = MongoClient("mongo")
@@ -65,8 +65,18 @@ def main():
         "notes": Notes(template_engine, mongo),
         "vk": VK(template_engine, mongo)
     }
-    application = Application(template_engine, modules)
-    cherrypy.quickstart(application, config="S.H.I.V.A..conf")
+    config = "S.H.I.V.A..conf"
+    cherrypy.config.update(config)
+    application = cherrypy.tree.mount(
+        Application(template_engine, modules),
+        "/",
+        config
+    )
+    application.log.access_log.addFilter(
+        IgnoreRequestFilter("GET /heartbeat/index"))
+    cherrypy.engine.signals.subscribe()
+    cherrypy.engine.start()
+    cherrypy.engine.block()
 
 
 if __name__ == "__main__":
