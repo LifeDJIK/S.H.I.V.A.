@@ -4,24 +4,39 @@ mongo:
      - "127.0.0.1:27017:27017"
     volumes:
      - ../database:/data/db
+
 memcached:
     image: memcached
     ports:
      - "127.0.0.1:11211:11211"
-shiva:
-    build: shiva
+
+shiva1:
+    extends:
+        file: shiva.yml
+        service: shiva
     links:
      - mongo:mongo
      - memcached:memcached
-    log_driver: "json-file"
-    log_opt:
-        max-size: "10m"
-        max-file: "5"
-    ports:
-     - "127.0.0.1:8080:8080"
+shiva2:
+    extends:
+        file: shiva.yml
+        service: shiva
+    links:
+     - mongo:mongo
+     - memcached:memcached
+shiva3:
+    extends:
+        file: shiva.yml
+        service: shiva
+    links:
+     - mongo:mongo
+     - memcached:memcached
+
 balancer:
     build: balancer
     links:
-     - shiva:shiva
+     - shiva1:shiva1
+     - shiva2:shiva2
+     - shiva3:shiva3
     ports:
      - "127.0.0.1:80:80"

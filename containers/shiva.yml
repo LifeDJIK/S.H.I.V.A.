@@ -1,0 +1,6 @@
+shiva:
+    build: shiva
+    log_driver: "json-file"
+    log_opt:
+        max-size: "10m"
+        max-file: "5"
