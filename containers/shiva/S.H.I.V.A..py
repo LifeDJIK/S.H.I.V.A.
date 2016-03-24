@@ -10,6 +10,7 @@ Application entry point
 
 import jinja2
 import cherrypy
+import platform
 
 from pymongo import MongoClient
 
@@ -47,6 +48,7 @@ class Application(object):
             "index.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            generator=platform.node(),
             modules=self.module_list
         )
 

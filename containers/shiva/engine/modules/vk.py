@@ -9,6 +9,7 @@ VK module
 
 
 import cherrypy
+import platform
 
 from operator import itemgetter
 
@@ -54,14 +55,15 @@ class VK(object):
             info = "Total records: {}".format(records)
             history_link = "/vk/read?id={}".format(sender)
             statistics_link = "#"
-            nodes.append({
-                "id": sender,
-                "name": name,
-                "info": info,
-                "records": records,
-                "history_link": history_link,
-                "statistics_link": statistics_link
-            })
+            if records > 0:
+                nodes.append({
+                    "id": sender,
+                    "name": name,
+                    "info": info,
+                    "records": records,
+                    "history_link": history_link,
+                    "statistics_link": statistics_link
+                })
         message = None
         if not nodes:
             message = "No dialogs or chats found"
@@ -71,6 +73,7 @@ class VK(object):
             "dialogs.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            generator=platform.node(),
             back="/",
             message=message,
             nodes=nodes
@@ -138,6 +141,7 @@ class VK(object):
             "dialog.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            generator=platform.node(),
             back="/vk/#id{}".format(id),
             message=message,
             nodes=nodes

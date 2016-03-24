@@ -22,7 +22,23 @@
     width: 600px;
     margin: auto;
     margin-top: 45px;
-    margin-bottom: 1%;
+    margin-bottom: 45px;
+    padding: 10px;
+}
+
+#footer {
+    border-style: solid;
+    border-width: medium;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom-style: none;
+    background-color: #999999;
+    width: 600px;
+    position: fixed;
+    bottom: 0%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, 0%);
     padding: 10px;
 }
 

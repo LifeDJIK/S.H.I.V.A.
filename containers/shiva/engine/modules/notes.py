@@ -10,6 +10,7 @@ Notes module
 
 import uuid
 import cherrypy
+import platform
 
 
 class Notes(object):
@@ -31,6 +32,7 @@ class Notes(object):
             "notes.html"
         ).render(
             user=cherrypy.session.get("login", None),
+            generator=platform.node(),
             back="/",
             message=message,
             token=cherrypy.session["notes_token"],

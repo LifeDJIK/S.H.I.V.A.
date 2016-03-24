@@ -12,6 +12,7 @@ import uuid
 import hashlib
 import binascii
 import cherrypy
+import platform
 
 
 class Auth(object):
@@ -50,12 +51,19 @@ class Auth(object):
             cherrypy.session["login_token"] = str(uuid.uuid4())
             return self.template_engine.get_template(
                 "login.html"
-            ).render(message=message, token=cherrypy.session["login_token"])
+            ).render(
+                generator=platform.node(),
+                message=message,
+                token=cherrypy.session["login_token"]
+            )
         if login is None or password is None or token is None:
             cherrypy.session["login_token"] = str(uuid.uuid4())
             return self.template_engine.get_template(
                 "login.html"
-            ).render(token=cherrypy.session["login_token"])
+            ).render(
+                generator=platform.node(),
+                token=cherrypy.session["login_token"]
+            )
         try:
             user = self.mongo["shiva"]["users"].find_one({"login": login})
             if user is not None:
