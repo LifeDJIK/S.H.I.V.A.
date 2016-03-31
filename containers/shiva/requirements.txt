@@ -1,4 +1,4 @@
-python-memcached
+hazelcast-python-client
 cherrypy
 pymongo
 jinja2

@@ -19,6 +19,9 @@ from engine.tools import secureheaders
 cherrypy.tools.secureheaders = cherrypy.Tool(
     "before_finalize", secureheaders, priority=60)
 
+from engine.tools import HazelcastSession
+cherrypy.lib.sessions.HazelcastSession = HazelcastSession
+
 from engine.modules.auth import Auth
 cherrypy.tools.check_login = cherrypy.Tool("before_handler", Auth.check_login)
 

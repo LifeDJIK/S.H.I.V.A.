@@ -1,42 +1,54 @@
-mongo:
-    image: mongo
-    ports:
-     - "127.0.0.1:27017:27017"
-    volumes:
-     - ../database:/data/db
+version: '2'
 
-memcached:
-    image: memcached
-    ports:
-     - "127.0.0.1:11211:11211"
+services:
+    mongo:
+        image: mongo
+        ports:
+         - "127.0.0.1:27017:27017"
+        volumes:
+         - ../database:/data/db
 
-shiva1:
-    extends:
-        file: shiva.yml
-        service: shiva
-    links:
-     - mongo:mongo
-     - memcached:memcached
-shiva2:
-    extends:
-        file: shiva.yml
-        service: shiva
-    links:
-     - mongo:mongo
-     - memcached:memcached
-shiva3:
-    extends:
-        file: shiva.yml
-        service: shiva
-    links:
-     - mongo:mongo
-     - memcached:memcached
+    hazelcast1:
+        image: hazelcast/hazelcast
+    hazelcast2:
+        image: hazelcast/hazelcast
+    hazelcast3:
+        image: hazelcast/hazelcast
 
-balancer:
-    build: balancer
-    links:
-     - shiva1:shiva1
-     - shiva2:shiva2
-     - shiva3:shiva3
-    ports:
-     - "127.0.0.1:80:80"
+    shiva1:
+        extends:
+            file: shiva.yml
+            service: shiva
+        depends_on:
+         - mongo
+         - hazelcast1
+         - hazelcast2
+         - hazelcast3
+    shiva2:
+        extends:
+            file: shiva.yml
+            service: shiva
+        depends_on:
+         - mongo
+         - hazelcast1
+         - hazelcast2
+         - hazelcast3
+    shiva3:
+        extends:
+            file: shiva.yml
+            service: shiva
+        depends_on:
+         - mongo
+         - hazelcast1
+         - hazelcast2
+         - hazelcast3
+
+    balancer:
+        build:
+            context: balancer
+        ports:
+         - "127.0.0.1:80:80"
+        depends_on:
+         - shiva1
+         - shiva2
+         - shiva3
