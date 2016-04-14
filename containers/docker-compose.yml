@@ -1,12 +1,21 @@
 version: '2'
 
 services:
-    mongo:
+    mongo1:
         image: mongo
-        ports:
-         - "127.0.0.1:27017:27017"
+        command: --replSet rs0
         volumes:
-         - ../database:/data/db
+         - ../database/mongo/1:/data/db
+    mongo2:
+        image: mongo
+        command: --replSet rs0
+        volumes:
+         - ../database/mongo/2:/data/db
+    mongo3:
+        image: mongo
+        command: --replSet rs0
+        volumes:
+         - ../database/mongo/3:/data/db
 
     hazelcast1:
         image: hazelcast/hazelcast
@@ -32,7 +41,9 @@ services:
             file: shiva.yml
             service: shiva
         depends_on:
-         - mongo
+         - mongo1
+         - mongo2
+         - mongo3
          - hazelcast1
          - hazelcast2
          - hazelcast3
@@ -41,7 +52,9 @@ services:
             file: shiva.yml
             service: shiva
         depends_on:
-         - mongo
+         - mongo1
+         - mongo2
+         - mongo3
          - hazelcast1
          - hazelcast2
          - hazelcast3
@@ -50,7 +63,9 @@ services:
             file: shiva.yml
             service: shiva
         depends_on:
-         - mongo
+         - mongo1
+         - mongo2
+         - mongo3
          - hazelcast1
          - hazelcast2
          - hazelcast3

@@ -61,7 +61,7 @@ def main():
     """ Main (entry point) """
     template_engine = jinja2.Environment(loader=jinja2.FileSystemLoader(
         "/usr/src/app/template"))
-    mongo = MongoClient("mongo")
+    mongo = MongoClient(["mongo1", "mongo2", "mongo3"], replicaSet="rs0")
     modules = {
         "heartbeat": Heartbeat(),
         "auth": Auth(template_engine, mongo),
