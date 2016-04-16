@@ -3,17 +3,17 @@ version: '2'
 services:
     mongo1:
         image: mongo
-        command: --replSet rs0
+        command: --replSet rs0 --enableMajorityReadConcern
         volumes:
          - ../database/mongo/1:/data/db
     mongo2:
         image: mongo
-        command: --replSet rs0
+        command: --replSet rs0 --enableMajorityReadConcern
         volumes:
          - ../database/mongo/2:/data/db
     mongo3:
         image: mongo
-        command: --replSet rs0
+        command: --replSet rs0 --enableMajorityReadConcern
         volumes:
          - ../database/mongo/3:/data/db
 

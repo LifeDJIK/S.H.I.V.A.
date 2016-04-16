@@ -13,6 +13,7 @@ import cherrypy
 import platform
 
 from pymongo import MongoClient
+from pymongo import ReadPreference
 
 from engine.tools import IgnoreRequestFilter
 from engine.tools import secureheaders
@@ -61,7 +62,7 @@ def main():
     """ Main (entry point) """
     template_engine = jinja2.Environment(loader=jinja2.FileSystemLoader(
         "/usr/src/app/template"))
-    mongo = MongoClient(["mongo1", "mongo2", "mongo3"], replicaSet="rs0")
+    mongo = MongoClient(["mongo1", "mongo2", "mongo3"], replicaSet="rs0", read_preference=ReadPreference.PRIMARY_PREFERRED, readConcernLevel="majority")
     modules = {
         "heartbeat": Heartbeat(),
         "auth": Auth(template_engine, mongo),
