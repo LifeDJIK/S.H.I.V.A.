@@ -36,9 +36,14 @@ services:
         volumes:
          - ./hazelcast:/data
 
+    redis1:
+        image: redis
+        volumes:
+         - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+
     shiva1:
         extends:
-            file: shiva.yml
+            file: shiva/S.H.I.V.A..yml
             service: shiva
         depends_on:
          - mongo1
@@ -49,7 +54,7 @@ services:
          - hazelcast3
     shiva2:
         extends:
-            file: shiva.yml
+            file: shiva/S.H.I.V.A..yml
             service: shiva
         depends_on:
          - mongo1
@@ -60,7 +65,7 @@ services:
          - hazelcast3
     shiva3:
         extends:
-            file: shiva.yml
+            file: shiva/S.H.I.V.A..yml
             service: shiva
         depends_on:
          - mongo1
@@ -70,9 +75,10 @@ services:
          - hazelcast2
          - hazelcast3
 
-    balancer:
-        build:
-            context: balancer
+    haproxy:
+        image: haproxy
+        volumes:
+         - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
         ports:
          - "127.0.0.1:80:80"
         depends_on:

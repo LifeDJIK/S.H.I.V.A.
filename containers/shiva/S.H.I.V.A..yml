@@ -3,7 +3,7 @@ version: '2'
 services:
     shiva:
         build:
-            context: shiva
+            context: .
         logging:
             driver: "json-file"
             options:
