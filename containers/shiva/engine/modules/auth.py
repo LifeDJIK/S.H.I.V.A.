@@ -72,7 +72,8 @@ class Auth(object):
                 if binascii.hexlify(dkey) != user["password"]:
                     user = None
         except:
-            user = None
+            raise cherrypy.HTTPRedirect(
+                "/auth/login?message=Internal error. Please try again")
         if token != cherrypy.session.get("login_token", "") or user is None:
             raise cherrypy.HTTPRedirect(
                 "/auth/login?message=Invalid login or password!")

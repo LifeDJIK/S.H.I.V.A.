@@ -52,6 +52,8 @@ class HazelcastSession(Session):
         socket.setdefaulttimeout(1.0)
         import hazelcast
         config = hazelcast.ClientConfig()
+        config.group_config.name = "shiva"
+        config.group_config.password = "shiva"
         for server in cls.servers:
             config.network_config.addresses.append(server)
         client = hazelcast.HazelcastClient(config)

@@ -20,26 +20,21 @@ services:
     hazelcast1:
         image: hazelcast/hazelcast
         environment:
-         - JAVA_OPTS=-Dhazelcast.max.join.merge.target.seconds=3 -Dhazelcast.connect.all.wait.seconds=3 -Dhazelcast.merge.first.run.delay.seconds=3 -Dhazelcast.merge.next.run.delay.seconds=3 -Dhazelcast.operation.call.timeout.millis=3000 -Dhazelcast.max.no.heartbeat.seconds=9  -Dhazelcast.max.no.master.confirmation.seconds=15 -Dhazelcast.member.list.publish.interval.seconds=5 -Dhazelcast.master.confirmation.interval.seconds=7 -Dhazelcast.config=/data/hazelcast.xml
+         - JAVA_OPTS=-Dhazelcast.config=/data/hazelcast.xml
         volumes:
          - ./hazelcast:/data
     hazelcast2:
         image: hazelcast/hazelcast
         environment:
-         - JAVA_OPTS=-Dhazelcast.max.join.merge.target.seconds=3 -Dhazelcast.connect.all.wait.seconds=3 -Dhazelcast.merge.first.run.delay.seconds=3 -Dhazelcast.merge.next.run.delay.seconds=3 -Dhazelcast.operation.call.timeout.millis=3000 -Dhazelcast.max.no.heartbeat.seconds=9  -Dhazelcast.max.no.master.confirmation.seconds=15 -Dhazelcast.member.list.publish.interval.seconds=5 -Dhazelcast.master.confirmation.interval.seconds=7 -Dhazelcast.config=/data/hazelcast.xml
+         - JAVA_OPTS=-Dhazelcast.config=/data/hazelcast.xml
         volumes:
          - ./hazelcast:/data
     hazelcast3:
         image: hazelcast/hazelcast
         environment:
-         - JAVA_OPTS=-Dhazelcast.max.join.merge.target.seconds=3 -Dhazelcast.connect.all.wait.seconds=3 -Dhazelcast.merge.first.run.delay.seconds=3 -Dhazelcast.merge.next.run.delay.seconds=3 -Dhazelcast.operation.call.timeout.millis=3000 -Dhazelcast.max.no.heartbeat.seconds=9  -Dhazelcast.max.no.master.confirmation.seconds=15 -Dhazelcast.member.list.publish.interval.seconds=5 -Dhazelcast.master.confirmation.interval.seconds=7 -Dhazelcast.config=/data/hazelcast.xml
+         - JAVA_OPTS=-Dhazelcast.config=/data/hazelcast.xml
         volumes:
          - ./hazelcast:/data
-
-    redis1:
-        image: redis
-        volumes:
-         - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
 
     shiva1:
         extends:

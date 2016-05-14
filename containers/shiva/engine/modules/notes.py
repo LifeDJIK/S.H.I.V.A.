@@ -28,16 +28,21 @@ class Notes(object):
         """ Index - show notes """
         cherrypy.session["notes_token"] = str(uuid.uuid4())
         viewpoint = "shiva_{}".format(cherrypy.session["id"])
-        return self.template_engine.get_template(
-            "notes.html"
-        ).render(
-            user=cherrypy.session.get("login", None),
-            generator=platform.node(),
-            back="/",
-            message=message,
-            token=cherrypy.session["notes_token"],
-            notes=self.mongo[viewpoint]["notes"].find()
-        )
+        try:
+            return self.template_engine.get_template(
+                "notes.html"
+            ).render(
+                user=cherrypy.session.get("login", None),
+                generator=platform.node(),
+                back="/",
+                message=message,
+                token=cherrypy.session["notes_token"],
+                notes=reversed(
+                    [i for i in self.mongo[viewpoint]["notes"].find()]
+                )
+            )
+        except:
+            raise cherrypy.HTTPRedirect("/notes/")
 
     @cherrypy.expose
     @cherrypy.tools.check_login()
@@ -49,7 +54,11 @@ class Notes(object):
         if token != session_token:
             raise cherrypy.HTTPRedirect("/notes/?message=Something is bad")
         viewpoint = "shiva_{}".format(cherrypy.session["id"])
-        self.mongo[viewpoint]["notes"].insert_one({
-            "text": text
-        })
+        try:
+            self.mongo[viewpoint]["notes"].insert_one({
+                "text": text
+            })
+        except:
+            raise cherrypy.HTTPRedirect(
+                "/notes/?message=Internal error. Please try again")
         raise cherrypy.HTTPRedirect("/notes/")
