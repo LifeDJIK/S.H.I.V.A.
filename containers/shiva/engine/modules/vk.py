@@ -12,9 +12,10 @@ import cherrypy
 import platform
 
 from operator import itemgetter
+from engine.modules import ModuleBase
 
 
-class VK(object):
+class VK(ModuleBase):
     """ VK history & analysis """
 
     MODULE_NAME = "VK History & Analysis"
@@ -23,10 +24,8 @@ class VK(object):
         self.template_engine = template_engine
         self.mongo = mongo
 
-    @cherrypy.expose
-    @cherrypy.tools.check_login()
-    def index(self):
-        """ Index - show dialogs/chats """
+    def _get_nodes(self):
+        """ Get nodes for current user """
         viewpoint = "shiva_{}".format(cherrypy.session["id"])
         messages_db = self.mongo[viewpoint]["messages"]
         people_db = self.mongo[viewpoint]["people"]
@@ -64,6 +63,18 @@ class VK(object):
                     "history_link": history_link,
                     "statistics_link": statistics_link
                 })
+        #
+        return nodes
+
+    def module_is_avalaible(self):
+        """ Check if this module should be shown to current user """
+        return bool(self._get_nodes())
+
+    @cherrypy.expose
+    @cherrypy.tools.check_login()
+    def index(self):
+        """ Index - show dialogs/chats """
+        nodes = self._get_nodes()
         message = None
         if not nodes:
             message = "No dialogs or chats found"

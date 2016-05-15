@@ -10,11 +10,17 @@ Heartbeat module
 
 import cherrypy
 
+from engine.modules import ModuleBase
 
-class Heartbeat(object):
+
+class Heartbeat(ModuleBase):
     """ Simple heartbeat / avalaible module for haproxy """
 
     MODULE_NAME = None
+
+    def module_is_avalaible(self):
+        """ Check if this module should be shown to current user """
+        return False
 
     @cherrypy.expose
     def index(self):

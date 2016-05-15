@@ -12,8 +12,10 @@ import uuid
 import cherrypy
 import platform
 
+from engine.modules import ModuleBase
 
-class Notes(object):
+
+class Notes(ModuleBase):
     """ Simple notes """
 
     MODULE_NAME = "Notes"
@@ -21,6 +23,10 @@ class Notes(object):
     def __init__(self, template_engine, mongo):
         self.template_engine = template_engine
         self.mongo = mongo
+
+    def module_is_avalaible(self):
+        """ Check if this module should be shown to current user """
+        return True
 
     @cherrypy.expose
     @cherrypy.tools.check_login()

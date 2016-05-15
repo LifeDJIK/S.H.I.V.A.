@@ -43,6 +43,7 @@ class Application(object):
                 item = dict()
                 item["path"] = module
                 item["name"] = modules[module].MODULE_NAME
+                item["instance"] = modules[module]
                 self.module_list.append(item)
 
     @cherrypy.expose

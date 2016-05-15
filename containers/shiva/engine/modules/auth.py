@@ -14,8 +14,10 @@ import binascii
 import cherrypy
 import platform
 
+from engine.modules import ModuleBase
 
-class Auth(object):
+
+class Auth(ModuleBase):
     """ Manages all auth tasks """
 
     MODULE_NAME = None
@@ -37,6 +39,10 @@ class Auth(object):
     def __init__(self, template_engine, mongo):
         self.template_engine = template_engine
         self.mongo = mongo
+
+    def module_is_avalaible(self):
+        """ Check if this module should be shown to current user """
+        return False
 
     @cherrypy.expose
     def index(self):
