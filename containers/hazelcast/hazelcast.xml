@@ -30,6 +30,6 @@
         <property name="hazelcast.max.no.master.confirmation.seconds">7</property>
         <property name="hazelcast.member.list.publish.interval.seconds">3</property>
         <property name="hazelcast.master.confirmation.interval.seconds">5</property>
-        <property name="hazelcast.operation.call.timeout.millis">3000</property>
+        <property name="hazelcast.operation.call.timeout.millis">5000</property>
     </properties>
 </hazelcast>

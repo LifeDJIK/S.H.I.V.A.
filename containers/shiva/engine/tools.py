@@ -54,51 +54,37 @@ class HazelcastSession(Session):
         config = hazelcast.ClientConfig()
         config.group_config.name = "shiva"
         config.group_config.password = "shiva"
+        config.properties["hazelcast.client.heartbeat.interval"] = 1000
+        config.properties["hazelcast.client.heartbeat.timeout"] = 15000
         for server in cls.servers:
             config.network_config.addresses.append(server)
         client = hazelcast.HazelcastClient(config)
-        cls.cache = client.get_map("cherrypy")
+        cls.cache = client.get_map("cherrypy").blocking()
 
     setup = classmethod(setup)
 
     def _exists(self):
         try:
-            result = self.cache.contains_key(self.id)
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    return result.result()
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in _exists()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            return self.cache.contains_key(self.id)
         except:
+            cherrypy.log("Error in _exists()")
             return False
 
     def _load(self):
         try:
-            result = self.cache.get(self.id)
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    _data = result.result()
-                    if _data is not None:
-                        _data = pickle.loads(base64.b64decode(_data))
-                    return _data
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in _load()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            _data = self.cache.get(self.id)
+            if _data is not None:
+                _data = pickle.loads(base64.b64decode(_data))
+            return _data
         except:
+            cherrypy.log("Error in _load()")
             return None
 
     def _save(self, expiration_time):
         current_time = datetime.datetime.now()
         ttl = int(abs((expiration_time - current_time).total_seconds()))
         try:
-            result = self.cache.put(
+            self.cache.put(
                 self.id,
                 base64.b64encode(
                     pickle.dumps(
@@ -108,80 +94,33 @@ class HazelcastSession(Session):
                 ),
                 ttl
             )
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    result.result()
-                    return
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in _save()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
         except:
-            pass
+            cherrypy.log("Error in _save()")
 
     def _delete(self):
         try:
-            result = self.cache.remove(self.id)
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    result.result()
-                    return
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in _delete()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            return self.cache.remove(self.id)
         except:
-            pass
+            cherrypy.log("Error in _delete()")
 
     def acquire_lock(self):
         self.locked = True
         try:
-            result = self.cache.lock(self.id)
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    result.result()
-                    return
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in acquire_lock()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            self.cache.lock(self.id)
         except:
-            pass
+            cherrypy.log("Error in acquire_lock()")
 
     def release_lock(self):
         try:
-            result = self.cache.unlock(self.id)
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    result.result()
-                    self.locked = False
-                    return
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in release_lock()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            self.cache.unlock(self.id)
+            self.locked = False
         except:
+            cherrypy.log("Error in release_lock()")
             self.locked = False
 
     def __len__(self):
         try:
-            result = self.cache.size()
-            waited = 0.0
-            while waited < self.max_wait_time:
-                if result.done():
-                    return result.result()
-                time.sleep(self.check_interval)
-                waited += self.check_interval
-            error_text = "Wait time exceeded in __len__()"
-            cherrypy.log(error_text)
-            raise Exception(error_text)
+            return self.cache.size()
         except:
+            cherrypy.log("Error in __len__()")
             return 0
