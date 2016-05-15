@@ -13,7 +13,6 @@ import cherrypy
 import logging
 import pickle
 import base64
-import time
 
 from cherrypy.lib.sessions import Session
 
