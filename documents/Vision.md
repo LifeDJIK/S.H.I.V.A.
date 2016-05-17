@@ -14,7 +14,7 @@
 # Product Overview
 This program was created to demonstrate the possibilities of distributed architecture.
 
-# Product Features. 
+# Product Features
 * Text notes creation
 * Saving notes created by user
 * User’s notes review  
