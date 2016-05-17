@@ -8,6 +8,7 @@
    This Vision Document applies to the S.H.I.V.A, which is developed by Ivan Krakhmaliuk, Svitlana Leus, Dmytro Korchovny, Galyna Melishkevich and Denys Matyash.
 
 3. Definitions, Acronyms, and Abbreviations
+
    S.H.I.V.A - Social network History Information Vault Analyzer.
 
 # Product Overview
